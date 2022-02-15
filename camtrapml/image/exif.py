@@ -12,7 +12,8 @@ def extract_exif(path: Union[Path, str]) -> dict:
     """
     Extracts EXIF data from an image.
     """
-    return ExifTool.execute_json(path)
+    with ExifTool() as exiftool:
+        return exiftool.get_metadata(filename=str(path))
 
 
 def extract_multiple_exif(paths: List[Union[Path, str]]) -> dict:
