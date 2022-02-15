@@ -1,3 +1,6 @@
+"""
+Detection Utilities
+"""
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -20,7 +23,7 @@ def render_detections(
 
     Returns:
 
-      The rendered image.
+      The rendered image as PIL.Image.
     """
 
     image = Image.open(image_path)

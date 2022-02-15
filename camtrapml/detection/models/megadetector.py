@@ -1,3 +1,23 @@
+"""
+MegaDetector, developed by Microsoft and collaborators aims to be a
+generlisable detection model for detecting animals, humans and vehicles in
+camera trap imagery.
+
+More information can be found on Microsoft's
+[CameraTrap GitHub Repository](https://github.com/microsoft/CameraTraps/blob/main/megadetector.md).
+
+This module contains just enough code to run each of MegaDetector versions
+where each version is provided with a consistent API.
+
+
+    from camtrapml.detection.models.megadetector import MegaDetectorV4_1
+
+    with MegaDetectorV4_1() as detector:
+        # Run detection on a single image
+        detections = detector.detect(image)
+
+"""
+
 import platform
 from pathlib import Path
 import tensorflow as tf
