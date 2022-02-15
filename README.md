@@ -33,13 +33,33 @@ Exif extraction is a common task in gathering the metadata such as each images t
 
 ExifTool is required for this package to work. Installation instructions can be found [here](https://exiftool.org/install.html).
 
+Three methods are provided for extracting EXIF data from images. Each with different performance characteristics.
+
+**Method 1: Individual Images**
+
+
+```python
+from camtrapml.image.exif import extract_exif
+
+exif = extract_exif(ena24_image_paths[0])
+exif
+```
+
+**Method 2: Multiple Images**
+
+`extract_multiple_exif` passes a list of image paths to ExifTool and returns a list of dictionaries containing the EXIF data. This is faster than `extract_exif` when multiple images are being processed as it only passes the list of image paths to ExifTool once, rather than spawning a new process for each image.
 
 
 ```python
 from camtrapml.image.exif import extract_multiple_exif
 
 exif = extract_multiple_exif(ena24_image_paths)
+exif[0]
 ```
+
+**Method 3: Multiple Images, Multiple Processes**
+
+When processing large datasets it's become apparent that the bottleneck in extracting the EXIF information tends to be CPU. This method, spawns multiple versions of ExifTool in parallel, each with a batch of image paths. This is faster than `extract_multiple_exif` when processing large datasets as it allows for multiple processes to be spawned and the data extracted in parallel.
 
 
 ```python
