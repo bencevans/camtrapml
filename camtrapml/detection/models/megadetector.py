@@ -18,29 +18,26 @@ where each version is provided with a consistent API.
 
 """
 
+from logging import warn
 import platform
 from pathlib import Path
+from typing import Union
 import tensorflow as tf
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 import numpy as np
 
-
-# Disable the GPU on M1 Macs as there appears to be a bug where the outputs are
-# not the same as the reference implementation.
-if platform.system() == "Darwin" and platform.machine() == "arm64":
-    tf.config.set_visible_devices([], "GPU")
 
 
 class MegaDetectorV4_1:
     """
-    Animal, Human and Vehicle Object Detection Model
-
-    https://github.com/Microsoft/CameraTraps/
+    MegaDetector V4.1.0
     """
 
     classes = {1: "animal", 2: "human", 3: "vehicle"}
 
-    def __init__(self, model_path=Path("./models/megadetector/md_v4.1.0.pb")) -> None:
+    def __init__(
+        self, model_path: Union[Path, str] = Path("./models/megadetector/md_v4.1.0.pb")
+    ) -> None:
         """
         Initializes the MegaDetector model.
 
@@ -59,6 +56,12 @@ class MegaDetectorV4_1:
         """
         Loads the model from the frozen model .pb file.
         """
+
+        # Disable the GPU on M1 Macs as there appears to be a bug where the outputs are
+        # not the same as the reference implementation.
+        if platform.system() == "Darwin" and platform.machine() == "arm64":
+            warn("Disabling GPU on M1 Macs")
+            tf.config.set_visible_devices([], "GPU")
 
         detection_graph = tf.compat.v1.Graph()
 
@@ -90,7 +93,7 @@ class MegaDetectorV4_1:
         self.score_tensor = None
         self.classes_tensor = None
 
-    def detect(self, image_path: Path, min_score=0.1) -> list:
+    def detect(self, image_path: Union[Path, str], min_score: float = 0.1) -> list:
         """
         Detects objects in the image.
 
