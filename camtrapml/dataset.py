@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from os import walk
 
+from camtrapml.image.utils import is_image
+
 
 class Dataset:
     name: str
@@ -19,7 +21,7 @@ class Dataset:
     def enumerate_images(self):
         for root, _, files in walk(self.path):
             for file in files:
-                if file.lower().endswith(".jpg"):
+                if is_image(Path(root) / file):
                     yield Path(root) / file
 
 
