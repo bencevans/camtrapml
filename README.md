@@ -25,6 +25,23 @@ ena24_image_paths = list(ena24.enumerate_images())
 thumbnail(load_image(ena24_image_paths[0]))
 ```
 
+### EXIF Extraction
+
+
+```python
+from camtrapml.image.exif import extract_multiple_exif
+
+exif = extract_multiple_exif(ena24_image_paths)
+```
+
+
+```python
+from camtrapml.image.exif import extract_multiple_exif_fast
+
+exif = extract_multiple_exif_fast(ena24_image_paths)
+exif[0]
+```
+
 ### Detection
 
 
@@ -43,5 +60,3 @@ thumbnail(
     )
 )
 ```
-
-
