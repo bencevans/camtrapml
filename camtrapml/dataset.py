@@ -62,5 +62,3 @@ class DetectionSet:
                 ymax = annotation["ymax"]
                 detection = Detection(image_path, label, xmin, ymin, xmax, ymax)
                 self.detections.append(detection)
-
-

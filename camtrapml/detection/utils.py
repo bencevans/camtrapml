@@ -1,16 +1,18 @@
 """
 Detection Utilities
 """
+from pathlib import Path
+from typing import Union
 from PIL import Image, ImageDraw, ImageFont
 
 
 def render_detections(
-    image_path,
+    image_path: Union[Path, str],
     detections,
     draw_box=True,
     draw_label=True,
     draw_score=True,
-    class_map=None,
+    class_map: Union[dict, None] = None,
 ):
     """
     Renders the image with the detections.
