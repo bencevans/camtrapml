@@ -1,6 +1,6 @@
 # CamTrapML
 
-> Suite of machine learning models for the detection and classification and analysis of camera trap imagery.
+> CamTrapML is a Python library for detecting, classifying, and analysing camera trap imagery.
 
 ## Installation
 
@@ -29,11 +29,11 @@ thumbnail(load_image(ena24_image_paths[0]))
 
 ### EXIF Extraction
 
-Exif extraction is a common task in gathering the metadata such as each images timestamp, camera model, focal length, etc. as well as some researchers write labelling into the EXIF data. Although this package doesn't assist with writing to EXIF, it can be used to extract if for the purposes of analysis and building datasets for training from previously labelled images.
+EXIF extraction is a common task in gathering the metadata such as each image's timestamp, camera model, focal length, etc. Some researchers write labelling into the EXIF data. CamTrapML doesn't assist with writing to EXIF. However, there is functionality for extracting it for analysis and building datasets for training new models from previously labelled images.
 
 ExifTool is required for this package to work. Installation instructions can be found [here](https://exiftool.org/install.html).
 
-Three methods are provided for extracting EXIF data from images. Each with different performance characteristics.
+Three methods are available for extracting EXIF data from images. Each with different performance characteristics.
 
 **Method 1: Individual Images**
 
@@ -59,7 +59,7 @@ exif[0]
 
 **Method 3: Multiple Images, Multiple Processes**
 
-When processing large datasets it's become apparent that the bottleneck in extracting the EXIF information tends to be CPU. This method, spawns multiple versions of ExifTool in parallel, each with a batch of image paths. This is faster than `extract_multiple_exif` when processing large datasets as it allows for multiple processes to be spawned and the data extracted in parallel.
+When processing large datasets, it's apparent that the bottleneck in extracting the EXIF information tends to be the CPU. This method spawns multiple versions of ExifTool in parallel, each with a batch of image paths. This is faster than `extract_multiple_exif` when processing large datasets as it allows for multiple processes to be spawned and the data extracted in parallel.
 
 
 ```python
@@ -71,7 +71,7 @@ exif[0]
 
 ### Detection
 
-Various Detection models have been packaged up in the camtrapml.detection subpackage. These currently include MegaDetector (v4.1, v3 and v2) and support for loading in custom Tensorflow v1.x Object Detection Frozen models.
+Various Detection models are available in the `camtrapml.detection` subpackage. These currently include MegaDetector (v4.1, v3 and v2) and support for loading in custom Tensorflow v1.x Object Detection Frozen models.
 
 #### Detection with MegaDetector v4.1
 
@@ -119,9 +119,4 @@ thumbnail(
         class_map=detector.class_map
     )
 )
-```
-
-
-```python
-
 ```
