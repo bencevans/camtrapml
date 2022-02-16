@@ -32,16 +32,16 @@ def render_detections(
     draw = ImageDraw.Draw(image)
 
     for detection in detections:
-        x_min, y_min, x_max, y_max = detection["bbox"]
+        min_y, min_x, max_y, max_x = detection["bbox"]
         image_width, image_height = image.size
 
         if draw_box:
             draw.rectangle(
                 [
-                    (y_min * image_width),
-                    (x_min * image_height),
-                    (y_max * image_width),
-                    (x_max * image_height),
+                    (min_x * image_width),
+                    (min_y * image_height),
+                    (max_x * image_width),
+                    (max_y * image_height),
                 ],
                 outline="red",
                 width=3,
@@ -60,8 +60,8 @@ def render_detections(
             text += " {:.2f}".format(detection["conf"]) if draw_score else ""
             draw.text(
                 (
-                    (y_min * image_width),
-                    (x_min * image_height) - 50,
+                    (min_x * image_width),
+                    (min_y * image_height) - 50,
                 ),
                 text,
                 fill="red",
@@ -89,14 +89,14 @@ def remove_detections_from_image(image: Image, detections):
     image = image.convert("RGB")
 
     for detection in detections:
-        x_min, y_min, x_max, y_max = detection["bbox"]
+        min_y, min_x, max_y, max_x = detection["bbox"]
         image_width, image_height = image.size
 
         cover_size = (
-            int(image.width * (y_max - y_min)),
-            int(image.height * (x_max - x_min)),
+            int(image_width * (max_x - min_x)),
+            int(image_height * (max_y - min_y)),
         )
-        cover_position = (int(image.width * y_min), int(image.height * x_min))
+        cover_position = (int(image_width * min_x), int(image_height * min_y))
 
         cover = Image.new("RGBA", cover_size, (0, 0, 0, 0))
 
@@ -122,14 +122,14 @@ def extract_detections_from_image(image: Image, detections):
     image_width, image_height = image.size
 
     for detection in detections:
-        x_min, y_min, x_max, y_max = detection["bbox"]
+        min_y, min_x, max_y, max_x = detection["bbox"]
         image_width, image_height = image.size
 
         yield image.crop(
             [
-                (y_min * image_width),
-                (x_min * image_height),
-                (y_max * image_width),
-                (x_max * image_height),
+                (min_x * image_width),
+                (min_y * image_height),
+                (max_x * image_width),
+                (max_y * image_height),
             ]
         )
