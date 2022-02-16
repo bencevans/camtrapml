@@ -86,22 +86,24 @@ def remove_detections_from_image(image: Image, detections):
     """
 
     image = image.copy()
-    image = image.convert('RGB')
+    image = image.convert("RGB")
 
     for detection in detections:
         x_min, y_min, x_max, y_max = detection["bbox"]
         image_width, image_height = image.size
 
-
-        cover_size = (int(image.width * (y_max - y_min)), int(image.height * (x_max - x_min)))
+        cover_size = (
+            int(image.width * (y_max - y_min)),
+            int(image.height * (x_max - x_min)),
+        )
         cover_position = (int(image.width * y_min), int(image.height * x_min))
 
         cover = Image.new("RGBA", cover_size, (0, 0, 0, 0))
 
         image.paste(cover, cover_position)
 
-
     return image
+
 
 def extract_detections_from_image(image: Image, detections):
     """

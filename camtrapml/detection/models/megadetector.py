@@ -74,7 +74,9 @@ class MegaDetectorV2(TF1ODAPIFrozenModel):
     model_path = Path("~").expanduser() / "Downloads" / "megadetector_v2.pb"
 
 
-def read_megadetector_batch_file(path: Union[Path, str], image_dir) -> Tuple[list, list]:
+def read_megadetector_batch_file(
+    path: Union[Path, str], image_dir
+) -> Tuple[list, list]:
     """
     Reads a batch file from a MegaDetector model.
 
@@ -89,7 +91,7 @@ def read_megadetector_batch_file(path: Union[Path, str], image_dir) -> Tuple[lis
     image_paths = []
     image_detections = []
 
-    images = load(open(path, 'r'))['images']
+    images = load(open(path, "r"))["images"]
 
     for image_data in images:
         image_path = image_dir / image_data["file"]
