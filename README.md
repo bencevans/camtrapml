@@ -1,6 +1,6 @@
 # CamTrapML
 
-> CamTrapML is a Python library for detecting, classifying, and analysing camera trap imagery.
+> CamTrapML is a Python library for Detecting, Classifying, and Analysing Wildlife [Camera Trap](https://en.wikipedia.org/wiki/Camera_trap) Imagery.
 
 ## Installation
 
@@ -14,6 +14,8 @@ Search for images in a directory, load an image and create a thumbnail.
 
 
 ```python
+%load_ext autoreload
+%autoreload
 from camtrapml.dataset import Dataset
 from camtrapml.image.utils import load_image, thumbnail
 
@@ -84,11 +86,7 @@ with MegaDetectorV4_1() as detector:
     detections = detector.detect(ena24_image_paths[0])
 
 thumbnail(
-    render_detections(
-        ena24_image_paths[0],
-        detections,
-        class_map=detector.class_map
-    )
+    render_detections(ena24_image_paths[0], detections, class_map=detector.class_map)
 )
 ```
 
@@ -101,11 +99,11 @@ from camtrapml.detection.utils import render_detections
 from pathlib import Path
 
 with TF1ODAPIFrozenModel(
-    model_path=Path('~/Downloads/my-custom-model.pb').expanduser(),
-    model_image_tensor_name='image_tensor:0',
-    model_boxes_tensor_name='detection_boxes:0',
-    model_scores_tensor_name='detection_scores:0',
-    model_classes_tensor_name='detection_classes:0',
+    model_path=Path("~/Downloads/my-custom-model.pb").expanduser(),
+    model_image_tensor_name="image_tensor:0",
+    model_boxes_tensor_name="detection_boxes:0",
+    model_scores_tensor_name="detection_scores:0",
+    model_classes_tensor_name="detection_classes:0",
     class_map={
         1: "animal",
     },
@@ -113,10 +111,88 @@ with TF1ODAPIFrozenModel(
     detections = detector.detect(ena24_image_paths[1])
 
 thumbnail(
-    render_detections(
-        ena24_image_paths[1],
-        detections,
-        class_map=detector.class_map
+    render_detections(ena24_image_paths[1], detections, class_map=detector.class_map)
+)
+```
+
+#### Extract Detections
+
+
+```python
+from camtrapml.detection.models.megadetector import MegaDetectorV4_1
+from camtrapml.detection.utils import extract_detections_from_image
+
+with MegaDetectorV4_1() as detector:
+    detections = detector.detect(ena24_image_paths[0])
+
+list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
+```
+
+#### Remove Humans from Images
+
+In order to reduce the risks of identification of humans in line with GDPR, CamTrapML provides the ability to remove humans from images. This is achieved by using the MegaDetector v3+ models to detect humans in the image, and then replacing all pixels in each human detection.
+
+
+```python
+from camtrapml.detection.models.megadetector import MegaDetectorV4_1
+from camtrapml.detection.utils import remove_detections_from_image
+from camtrapml.image.utils import load_image, thumbnail
+from pathlib import Path
+
+ct_image_with_humans = Path("~/Datasets/FieldDayDS/FieldDay/IMG_0576.JPG").expanduser()
+
+with MegaDetectorV4_1() as detector:
+    detections = detector.detect(ct_image_with_humans)
+
+human_class_id = 2
+
+thumbnail(
+    remove_detections_from_image(
+        load_image(ct_image_with_humans),
+        [
+            detection
+            for detection in detections
+            if detection["category"] == human_class_id and detection["conf"] > 0.5
+        ],
     )
 )
+```
+
+### Embedding / Feature Vector Extraction
+
+
+```python
+from camtrapml.detection.models.megadetector import read_megadetector_batch_file
+from camtrapml.image.utils import load_image
+from camtrapml.detection.utils import extract_detections_from_image
+from camtrapml.embedding.models.inaturalist import Inat2017InceptionV3
+from camtrapml.embedding.utils import plot_embeddings
+import numpy as np
+from pathlib import Path
+from tqdm import tqdm
+
+image_paths, detections = read_megadetector_batch_file(
+    Path("~/Datasets/ENA24/ena24/md.4.1.0.json").expanduser(),
+    image_dir=Path("~/Datasets/ENA24/ena24/").expanduser(),
+)
+
+all_embeddings = []
+
+with Inat2017InceptionV3() as embeddings_model:
+    for (image_path, detections) in tqdm(list(zip(image_paths, detections))):
+        image = load_image(image_path)
+
+        detection_extracts = extract_detections_from_image(
+            image,
+            [
+                detection
+                for detection in detections
+                if detection["category"] == "1" and detection["conf"] > 0.5
+            ],
+        )
+
+        for extract in detection_extracts:
+            all_embeddings.append(embeddings_model.predict(extract))
+
+plot_embeddings(np.array(all_embeddings))
 ```
