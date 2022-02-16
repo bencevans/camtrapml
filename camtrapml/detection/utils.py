@@ -4,6 +4,7 @@ Detection Utilities
 from pathlib import Path
 from typing import Union
 from PIL import Image, ImageDraw, ImageFont
+from font_fredoka_one import FredokaOne
 
 
 def render_detections(
@@ -49,7 +50,7 @@ def render_detections(
 
         if draw_label or draw_score:
             font = ImageFont.FreeTypeFont(
-                "/System/Library/Fonts/Supplemental/Verdana.ttf", size=40
+                FredokaOne, size=40
             )
             class_name = (
                 class_map[detection["category"]]
