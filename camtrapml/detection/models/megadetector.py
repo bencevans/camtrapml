@@ -18,7 +18,9 @@ where each version is provided with a consistent API.
 
 """
 from pathlib import Path
+from typing import Tuple, Union
 from .tensorflow import TF1ODAPIFrozenModel
+from json import load
 
 
 class MegaDetectorV4_1(TF1ODAPIFrozenModel):
@@ -70,3 +72,28 @@ class MegaDetectorV2(TF1ODAPIFrozenModel):
     model_url = "https://lilablobssc.blob.core.windows.net/models/camera_traps/megadetector/megadetector_v2.pb"
     model_hash = ""
     model_path = Path("~").expanduser() / "Downloads" / "megadetector_v2.pb"
+
+
+def read_megadetector_batch_file(path: Union[Path, str], image_dir) -> Tuple[list, list]:
+    """
+    Reads a batch file from a MegaDetector model.
+
+    Args:
+        path: Path to the batch file.
+        image_dir: Path to the directory containing the images.
+
+    Returns:
+        A tuple of (image_paths, image_detections)
+    """
+
+    image_paths = []
+    image_detections = []
+
+    images = load(open(path, 'r'))['images']
+
+    for image_data in images:
+        image_path = image_dir / image_data["file"]
+        image_paths.append(image_path)
+        image_detections.append(image_data["detections"])
+
+    return image_paths, image_detections
