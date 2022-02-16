@@ -71,6 +71,38 @@ def render_detections(
     return image
 
 
+def remove_detections_from_image(image: Image, detections):
+    """
+    Removes the detections from an image.
+
+    Args:
+
+      image: Image to remove the detections from.
+      detections: List of detections to remove.
+
+    Returns:
+
+      The rendered image as PIL.Image.
+    """
+
+    image = image.copy()
+    image = image.convert('RGB')
+
+    for detection in detections:
+        x_min, y_min, x_max, y_max = detection["bbox"]
+        image_width, image_height = image.size
+
+
+        cover_size = (int(image.width * (y_max - y_min)), int(image.height * (x_max - x_min)))
+        cover_position = (int(image.width * y_min), int(image.height * x_min))
+
+        cover = Image.new("RGBA", cover_size, (0, 0, 0, 0))
+
+        image.paste(cover, cover_position)
+
+
+    return image
+
 def extract_detections_from_image(image: Image, detections):
     """
     Extracts the detections from an image.
@@ -88,9 +120,6 @@ def extract_detections_from_image(image: Image, detections):
     image_width, image_height = image.size
 
     for detection in detections:
-        x_min, y_min, x_max, y_max = detection["bbox"]
-        image_width, image_height = image.size
-
         x_min, y_min, x_max, y_max = detection["bbox"]
         image_width, image_height = image.size
 
