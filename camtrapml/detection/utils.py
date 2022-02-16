@@ -69,3 +69,36 @@ def render_detections(
             )
 
     return image
+
+
+def extract_detections_from_image(image: Image, detections):
+    """
+    Extracts the detections from an image.
+
+    Args:
+
+      image: Image to extract the detections from.
+      detections: List of detections to extract.
+
+    Returns:
+
+      The rendered image as PIL.Image.
+    """
+
+    image_width, image_height = image.size
+
+    for detection in detections:
+        x_min, y_min, x_max, y_max = detection["bbox"]
+        image_width, image_height = image.size
+
+        x_min, y_min, x_max, y_max = detection["bbox"]
+        image_width, image_height = image.size
+
+        yield image.crop(
+                [
+                    (y_min * image_width),
+                    (x_min * image_height),
+                    (y_max * image_width),
+                    (x_max * image_height),
+                ]
+            )
