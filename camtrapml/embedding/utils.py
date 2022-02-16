@@ -21,7 +21,12 @@ def plot_embeddings(embeddings, labels=None, title=None, save_path=None):
     # Plot the embeddings
     plt.figure(figsize=(8, 8))
     for i in range(len(embeddings)):
-        plt.scatter(embeddings[i, 0], embeddings[i, 1], c=labels[i] if labels else None, alpha=0.5)
+        plt.scatter(
+            embeddings[i, 0],
+            embeddings[i, 1],
+            c=labels[i] if labels else None,
+            alpha=0.5,
+        )
     # plt.legend(handles=get_legend_handles(labels), loc='best', prop=FontProperties(size=10))
     if title is not None:
         plt.title(title)

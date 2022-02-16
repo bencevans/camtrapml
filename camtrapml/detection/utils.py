@@ -95,10 +95,10 @@ def extract_detections_from_image(image: Image, detections):
         image_width, image_height = image.size
 
         yield image.crop(
-                [
-                    (y_min * image_width),
-                    (x_min * image_height),
-                    (y_max * image_width),
-                    (x_max * image_height),
-                ]
-            )
+            [
+                (y_min * image_width),
+                (x_min * image_height),
+                (y_max * image_width),
+                (x_max * image_height),
+            ]
+        )
