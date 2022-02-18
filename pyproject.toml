@@ -5,12 +5,19 @@ description = "CamTrapML is a Python library for Detecting, Classifying, and Ana
 authors = ["Benjamin C. Evans <Benjamin.Evans@brunel.ac.uk>"]
 
 [tool.poetry.dependencies]
-python = ">=3.9"
-numpy = "^1.22.2"
+python = ">=3.8,<3.11"
 tensorflow = "^2.8.0"
+numpy = "^1.22.2"
+tqdm = "^4.62.3"
+Pillow = "^9.0.1"
+tensorflow-hub = "^0.12.0"
+PyExifTool = "^0.4.13"
+font-fredoka-one = "^0.0.4"
 
 
 [tool.poetry.dev-dependencies]
+nbconvert = "^6.4.2"
+notebook = "^6.4.8"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
