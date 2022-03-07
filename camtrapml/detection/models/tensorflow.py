@@ -32,12 +32,12 @@ class TF1ODAPIFrozenModel:
 
     def __init__(
         self,
-        model_path: Union[Path, str] = None,
-        model_image_tensor_name: str = None,
-        model_boxes_tensor_name: str = None,
-        model_scores_tensor_name: str = None,
-        model_classes_tensor_name: str = None,
-        class_map: dict = None,
+        model_path: Union[Path, str, None] = None,
+        model_image_tensor_name: Union[str, None] = None,
+        model_boxes_tensor_name: Union[str, None] = None,
+        model_scores_tensor_name: Union[str, None] = None,
+        model_classes_tensor_name: Union[str, None] = None,
+        class_map: Union[dict, None] = None,
     ) -> None:
         """
         Initialises a Tensorflow V1 Object Detection Frozen Graph Model.
@@ -106,7 +106,8 @@ class TF1ODAPIFrozenModel:
         """
         Closes the model.
         """
-        self._session.close()
+        if self._session:
+            self._session.close()
         self._detection_graph = None
         self._session = None
         self._model_image_tensor = None

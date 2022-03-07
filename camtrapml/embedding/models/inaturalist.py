@@ -6,7 +6,7 @@ from PIL import Image
 
 
 class Inat2017InceptionV3:
-    def predict(self, image: Image):
+    def predict(self, image: Image.Image):
         image = image.copy()
         image = image.resize((299, 299))
         image = np.asarray(image, dtype=np.float32) / 255.0

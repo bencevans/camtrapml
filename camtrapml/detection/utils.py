@@ -38,12 +38,12 @@ def render_detections(
 
         if draw_box:
             draw.rectangle(
-                [
+                (
                     (min_x * image_width),
                     (min_y * image_height),
                     (max_x * image_width),
                     (max_y * image_height),
-                ],
+                ),
                 outline="red",
                 width=3,
             )
@@ -72,7 +72,7 @@ def render_detections(
     return image
 
 
-def remove_detections_from_image(image: Image, detections):
+def remove_detections_from_image(image: Image.Image, detections):
     """
     Removes the detections from an image.
 
@@ -106,7 +106,7 @@ def remove_detections_from_image(image: Image, detections):
     return image
 
 
-def extract_detections_from_image(image: Image, detections):
+def extract_detections_from_image(image: Image.Image, detections):
     """
     Extracts the detections from an image.
 
@@ -127,10 +127,10 @@ def extract_detections_from_image(image: Image, detections):
         image_width, image_height = image.size
 
         yield image.crop(
-            [
+            (
                 (min_x * image_width),
                 (min_y * image_height),
                 (max_x * image_width),
                 (max_y * image_height),
-            ]
+            )
         )

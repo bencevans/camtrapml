@@ -16,7 +16,7 @@ def extract_exif(path: Union[Path, str]) -> dict:
         return exiftool.get_metadata(filename=str(path))
 
 
-def extract_multiple_exif(paths: List[Union[Path, str]]) -> dict:
+def extract_multiple_exif(paths: List[Union[Path, str]]) -> list:
     """
     Extracts EXIF data from multiple images.
     """
@@ -24,7 +24,7 @@ def extract_multiple_exif(paths: List[Union[Path, str]]) -> dict:
         return exiftool.get_metadata_batch([str(path) for path in paths])
 
 
-def extract_multiple_exif_fast(paths: List[Union[Path, str]], batch_size=100) -> dict:
+def extract_multiple_exif_fast(paths: List[Union[Path, str]], batch_size=100) -> list:
     """
     Extracts EXIF data from a list of images by spreading the load across
     multiple processes making use of multiple CPU cores.

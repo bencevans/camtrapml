@@ -7,14 +7,14 @@ from PIL import Image
 from pathlib import Path
 
 
-def load_image(path: Union[Path, str]) -> Image:
+def load_image(path: Union[Path, str]) -> Image.Image:
     """
     Loads an image from a path.
     """
     return Image.open(path)
 
 
-def thumbnail(image: Image, size: Tuple[int, int] = (400, 400)) -> Image:
+def thumbnail(image: Image.Image, size: Tuple[int, int] = (400, 400)) -> Image.Image:
     """
     Generates a thumbnail of an image keeping aspect ratio. The size argument
     is the maximum size of the thumbnail.
