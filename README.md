@@ -21,7 +21,7 @@ from camtrapml.image.utils import load_image, thumbnail
 
 ena24 = Dataset(
     name="ena24",
-    path="~/Datasets/ena24/ena24",
+    path="/pool0/datasets/ena24/ena24",
 )
 
 ena24_image_paths = list(ena24.enumerate_images())
@@ -128,6 +128,28 @@ with MegaDetectorV4_1() as detector:
 list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
 ```
 
+
+```python
+from camtrapml.detection.models.megadetector import MegaDetectorV3
+from camtrapml.detection.utils import extract_detections_from_image
+
+with MegaDetectorV3() as detector:
+    detections = detector.detect(ena24_image_paths[0])
+
+list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
+```
+
+
+```python
+from camtrapml.detection.models.megadetector import MegaDetectorV2
+from camtrapml.detection.utils import extract_detections_from_image
+
+with MegaDetectorV2() as detector:
+    detections = detector.detect(ena24_image_paths[0])
+
+list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
+```
+
 #### Remove Humans from Images
 
 In order to reduce the risks of identification of humans in line with GDPR, CamTrapML provides the ability to remove humans from images. This is achieved by using the MegaDetector v3+ models to detect humans in the image, and then replacing all pixels in each human detection.
@@ -139,7 +161,7 @@ from camtrapml.detection.utils import remove_detections_from_image
 from camtrapml.image.utils import load_image, thumbnail
 from pathlib import Path
 
-ct_image_with_humans = Path("~/Datasets/FieldDayDS/FieldDay/IMG_0576.JPG").expanduser()
+ct_image_with_humans = Path("/pool0/datasets/bens-day-at-zsl/IMG_0576.JPG").expanduser()
 
 with MegaDetectorV4_1() as detector:
     detections = detector.detect(ct_image_with_humans)
@@ -156,43 +178,4 @@ thumbnail(
         ],
     )
 )
-```
-
-### Embedding / Feature Vector Extraction
-
-
-```python
-from camtrapml.detection.models.megadetector import read_megadetector_batch_file
-from camtrapml.image.utils import load_image
-from camtrapml.detection.utils import extract_detections_from_image
-from camtrapml.embedding.models.inaturalist import Inat2017InceptionV3
-from camtrapml.embedding.utils import plot_embeddings
-import numpy as np
-from pathlib import Path
-from tqdm import tqdm
-
-image_paths, detections = read_megadetector_batch_file(
-    Path("~/Datasets/ENA24/ena24/md.4.1.0.json").expanduser(),
-    image_dir=Path("~/Datasets/ENA24/ena24/").expanduser(),
-)
-
-all_embeddings = []
-
-with Inat2017InceptionV3() as embeddings_model:
-    for (image_path, detections) in tqdm(list(zip(image_paths, detections))):
-        image = load_image(image_path)
-
-        detection_extracts = extract_detections_from_image(
-            image,
-            [
-                detection
-                for detection in detections
-                if detection["category"] == "1" and detection["conf"] > 0.5
-            ],
-        )
-
-        for extract in detection_extracts:
-            all_embeddings.append(embeddings_model.predict(extract))
-
-plot_embeddings(np.array(all_embeddings))
 ```
