@@ -13,6 +13,7 @@ Pillow = "^9.0.1"
 tensorflow-hub = "^0.12.0"
 PyExifTool = "^0.4.13"
 font-fredoka-one = "^0.0.4"
+requests = "^2.27.1"
 
 
 [tool.poetry.dev-dependencies]

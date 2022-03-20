@@ -6,6 +6,7 @@ from logging import warn
 from typing import Union
 from pathlib import Path
 from PIL import Image
+from ...download import download, hash
 
 
 class TF1ODAPIFrozenModel:
@@ -33,6 +34,8 @@ class TF1ODAPIFrozenModel:
     def __init__(
         self,
         model_path: Union[Path, str, None] = None,
+        model_url: str = "",
+        model_hash: str = "",
         model_image_tensor_name: Union[str, None] = None,
         model_boxes_tensor_name: Union[str, None] = None,
         model_scores_tensor_name: Union[str, None] = None,
@@ -50,6 +53,12 @@ class TF1ODAPIFrozenModel:
         if model_path:
             self.model_path = model_path
 
+        if model_url:
+            self.model_url = model_url
+
+        if model_hash:
+            self.model_hash = model_hash
+
         if model_image_tensor_name:
             self.model_image_tensor_name = model_image_tensor_name
 
@@ -64,6 +73,15 @@ class TF1ODAPIFrozenModel:
 
         if class_map:
             self.class_map = class_map
+
+        if Path(self.model_path).exists() == False and self.model_url != "":
+            download(self.model_url, self.model_path, '')
+        elif Path(self.model_path).exists() == True and model_hash in dir(self) and self.model_hash != "":
+            local_hash = hash(self.model_path)
+            if local_hash != self.model_hash:
+                raise ValueError(
+                    f"Hash mismatch for model {self.model_path}. Local hash: {local_hash}."
+                )
 
     def load_model(self) -> None:
         """
