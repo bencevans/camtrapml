@@ -5,12 +5,19 @@ General image processing functions.
 from typing import Tuple, Union
 from PIL import Image
 from pathlib import Path
+from urllib.parse import urlparse
+from requests import get
+from io import BytesIO
 
 
 def load_image(path: Union[Path, str]) -> Image.Image:
     """
     Loads an image from a path.
     """
+
+    if isinstance(path, str) and urlparse(path).scheme in ['http', 'https']:
+        return Image.open(BytesIO(get(path).content))
+
     return Image.open(path)
 
 
@@ -29,7 +36,7 @@ def is_image(path: Union[Path, str]) -> bool:
     Checks if a path is an image, or at least one that can be read with Pillow.
     """
     try:
-        Image.open(path)
+        load_image(path)
         return True
     except:
         return False
