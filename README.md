@@ -128,28 +128,6 @@ with MegaDetectorV4_1() as detector:
 list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
 ```
 
-
-```python
-from camtrapml.detection.models.megadetector import MegaDetectorV3
-from camtrapml.detection.utils import extract_detections_from_image
-
-with MegaDetectorV3() as detector:
-    detections = detector.detect(ena24_image_paths[0])
-
-list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
-```
-
-
-```python
-from camtrapml.detection.models.megadetector import MegaDetectorV2
-from camtrapml.detection.utils import extract_detections_from_image
-
-with MegaDetectorV2() as detector:
-    detections = detector.detect(ena24_image_paths[0])
-
-list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
-```
-
 #### Remove Humans from Images
 
 In order to reduce the risks of identification of humans in line with GDPR, CamTrapML provides the ability to remove humans from images. This is achieved by using the MegaDetector v3+ models to detect humans in the image, and then replacing all pixels in each human detection.
