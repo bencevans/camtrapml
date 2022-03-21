@@ -9,29 +9,42 @@ from io import BytesIO
 from PIL import Image
 from requests import get
 
+ImageSource = Union[Image.Image, Path, str]
 
-def load_image(path: Union[Path, str]) -> Image.Image:
+
+def load_image(source: ImageSource, mode = "rgb") -> Image.Image:
     """
-    Loads an image from a path.
+    Loads an image from a path or url or returns a copy of a previously loaded image.
     """
 
-    if isinstance(path, str) and urlparse(path).scheme in ["http", "https"]:
-        return Image.open(BytesIO(get(path).content))
+    if isinstance(source, str) and urlparse(source).scheme in ["http", "https"]:
+        image = Image.open(BytesIO(get(source).content))
 
-    return Image.open(path)
+    elif isinstance(source, Image.Image):
+        image = source.copy()
+
+    else:
+        image = Image.open(source)
 
 
-def thumbnail(image: Image.Image, size: Tuple[int, int] = (400, 400)) -> Image.Image:
+    if mode is not None:
+        image = image.convert(mode)
+
+    return image
+
+
+
+def thumbnail(source: ImageSource, size: Tuple[int, int] = (400, 400)) -> Image.Image:
     """
     Generates a thumbnail of an image keeping aspect ratio. The size argument
     is the maximum size of the thumbnail.
     """
-    image = image.copy()
+    image = load_image(source)
     image.thumbnail(size, Image.ANTIALIAS)
     return image
 
 
-def is_image(path: Union[Path, str]) -> bool:
+def is_image(path: ImageSource) -> bool:
     """
     Checks if a path is an image, or at least one that can be read with Pillow.
     """
