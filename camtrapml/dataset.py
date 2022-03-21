@@ -8,7 +8,7 @@ from os import walk
 from camtrapml.image.utils import is_image
 
 
-class Dataset:
+class ImageDataset:
     """
     A dataset is a collection of images.
     """
@@ -32,3 +32,10 @@ class Dataset:
             for file in files:
                 if is_image(Path(root) / file):
                     yield Path(root) / file
+
+    @staticmethod
+    def from_coco(source):
+        """
+        Load a Dataset Instance from COCO-CameraTrap
+        """
+        raise NotImplementedError()

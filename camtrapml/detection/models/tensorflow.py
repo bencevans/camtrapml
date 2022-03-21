@@ -24,27 +24,12 @@ class TF1ODAPIFrozenModel:
     model_path = None
     model_version = None
     model_url = ""
-    model_image_tensor_name = "image_tensor:0"
-    model_boxes_tensor_name = "detection_boxes:0"
-    model_scores_tensor_name = "detection_scores:0"
-    model_classes_tensor_name = "detection_classes:0"
-
-    _detection_graph = None
-    _session = None
-    _image_tensor = None
-    _box_tensor = None
-    _score_tensor = None
-    _classes_tensor = None
 
     def __init__(
         self,
         model_path: Union[Path, str, None] = None,
         model_url: str = "",
         model_hash: str = "",
-        model_image_tensor_name: Union[str, None] = None,
-        model_boxes_tensor_name: Union[str, None] = None,
-        model_scores_tensor_name: Union[str, None] = None,
-        model_classes_tensor_name: Union[str, None] = None,
         class_map: Union[dict, None] = None,
     ) -> None:
         """
@@ -64,25 +49,11 @@ class TF1ODAPIFrozenModel:
         if model_hash:
             self.model_hash = model_hash
 
-        if model_image_tensor_name:
-            self.model_image_tensor_name = model_image_tensor_name
-
-        if model_boxes_tensor_name:
-            self.model_boxes_tensor_name = model_boxes_tensor_name
-
-        if model_scores_tensor_name:
-            self.model_scores_tensor_name = model_scores_tensor_name
-
-        if model_classes_tensor_name:
-            self.model_classes_tensor_name = model_classes_tensor_name
-
         if class_map:
             self.class_map = class_map
 
-        self._model_image_tensor = None
-        self._model_boxes_tensor = None
-        self._model_scores_tensor = None
-        self._model_classes_tensor = None
+        self._session = None
+        self._tensors = None
 
         if Path(self.model_path).exists() is False and self.model_url != "":
             download(self.model_url, self.model_path, "")
@@ -97,7 +68,7 @@ class TF1ODAPIFrozenModel:
                     f"Hash mismatch for model {self.model_path}. Local hash: {local_hash}."
                 )
 
-    def load_model(self) -> None:
+    def load_model(self,) -> None:
         """
         Loads the model from the frozen model .pb file.
         """
@@ -110,7 +81,7 @@ class TF1ODAPIFrozenModel:
 
         detection_graph = tf.compat.v1.Graph()
 
-        with detection_graph.as_default():
+        with detection_graph.as_default():  # pylint: disable=E1129
             od_graph_def = tf.compat.v1.GraphDef()
             with tf.compat.v1.gfile.GFile(str(self.model_path), "rb") as fid:
                 serialized_graph = fid.read()
@@ -120,19 +91,20 @@ class TF1ODAPIFrozenModel:
         self._session = tf.compat.v1.Session(graph=detection_graph)
 
         # Get the tensors we need.
-        self._detection_graph = detection_graph
-        self._model_image_tensor = detection_graph.get_tensor_by_name(
-            self.model_image_tensor_name
-        )
-        self._model_boxes_tensor = detection_graph.get_tensor_by_name(
-            self.model_boxes_tensor_name
-        )
-        self._model_scores_tensor = detection_graph.get_tensor_by_name(
-            self.model_scores_tensor_name
-        )
-        self._model_classes_tensor = detection_graph.get_tensor_by_name(
-            self.model_classes_tensor_name
-        )
+        self._tensors = {
+            'image': detection_graph.get_tensor_by_name(
+                "image_tensor:0"
+            ),
+            'boxes': detection_graph.get_tensor_by_name(
+                "detection_boxes:0"
+            ),
+            'scores': detection_graph.get_tensor_by_name(
+                "detection_scores:0"
+            ),
+            'classes': detection_graph.get_tensor_by_name(
+                "detection_classes:0"
+            )
+        }
 
     def close(self) -> None:
         """
@@ -140,12 +112,9 @@ class TF1ODAPIFrozenModel:
         """
         if self._session:
             self._session.close()
-        self._detection_graph = None
+
         self._session = None
-        self._model_image_tensor = None
-        self._model_boxes_tensor = None
-        self._model_scores_tensor = None
-        self._model_classes_tensor = None
+        self._tensors = None
 
     def detect(self, image_source: ImageSource, min_score: float = 0.1) -> list:
         """
@@ -163,7 +132,7 @@ class TF1ODAPIFrozenModel:
         """
 
         # Load the detection graph once.
-        if self._detection_graph is None:
+        if self._session is None:
             self.load_model()
 
         # Load the image.
@@ -175,11 +144,11 @@ class TF1ODAPIFrozenModel:
 
         (box_tensor_out, score_tensor_out, class_tensor_out) = self._session.run(
             [
-                self._model_boxes_tensor,
-                self._model_scores_tensor,
-                self._model_classes_tensor,
+                self._tensors['boxes'],
+                self._tensors['scores'],
+                self._tensors['classes'],
             ],
-            feed_dict={self._model_image_tensor: image_np_expanded},
+            feed_dict={self._tensors['image']: image_np_expanded},
         )
 
         # Filter out the low scoring detections and return the bounding boxes.

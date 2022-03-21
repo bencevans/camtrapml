@@ -26,7 +26,7 @@ from ...download import CACHE_HOME
 MODEL_FILES_ROUTE = "https://lilablobssc.blob.core.windows.net/models/camera_traps/megadetector/"
 
 
-class MegaDetectorV4_1(TF1ODAPIFrozenModel): # pylint: disable=C0103
+class MegaDetectorV4_1(TF1ODAPIFrozenModel):  # pylint: disable=C0103
     """
     MegaDetector v4.1
     """
@@ -94,7 +94,8 @@ def read_megadetector_batch_file(
     image_paths = []
     image_detections = []
 
-    images = load(open(path, "r", encoding="UTF-8"))["images"]
+    with open(path, "r", encoding="UTF-8") as file_handle:
+        images = load(file_handle)["images"]
 
     for image_data in images:
         image_path = image_dir / image_data["file"]

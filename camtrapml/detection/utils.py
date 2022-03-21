@@ -4,14 +4,13 @@ Detection Utilities
 from pathlib import Path
 from typing import Union
 from PIL import Image, ImageDraw, ImageFont
-from font_fredoka_one import FredokaOne # pylint: disable=E0611
+from font_fredoka_one import FredokaOne  # pylint: disable=E0611
 
 
 def render_detections(
     image_path: Union[Path, str],
     detections,
     draw_box=True,
-    draw_label=True,
     draw_score=True,
     class_map: Union[dict, None] = None,
 ):
@@ -34,33 +33,32 @@ def render_detections(
 
     for detection in detections:
         min_y, min_x, max_y, max_x = detection["bbox"]
-        image_width, image_height = image.size
 
         if draw_box:
             draw.rectangle(
                 (
-                    (min_x * image_width),
-                    (min_y * image_height),
-                    (max_x * image_width),
-                    (max_y * image_height),
+                    (min_x * image.size[0]),
+                    (min_y * image.size[1]),
+                    (max_x * image.size[0]),
+                    (max_y * image.size[1]),
                 ),
                 outline="red",
                 width=3,
             )
 
-        if draw_label or draw_score:
+        if class_map or draw_score:
             font = ImageFont.FreeTypeFont(FredokaOne, size=40)
             class_name = (
                 class_map[detection["category"]]
                 if class_map and detection["category"] in class_map
                 else str(detection["category"])
             )
-            text = class_name if draw_label else ""
+            text = class_name if class_map else ""
             text += f" {detection['conf']:.2f}" if draw_score else ""
             draw.text(
                 (
-                    (min_x * image_width),
-                    (min_y * image_height) - 50,
+                    (min_x * image.size[0]),
+                    (min_y * image.size[1]) - 50,
                 ),
                 text,
                 fill="red",
