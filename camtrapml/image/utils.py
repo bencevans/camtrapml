@@ -3,11 +3,11 @@ General image processing functions.
 """
 
 from typing import Tuple, Union
-from PIL import Image
 from pathlib import Path
 from urllib.parse import urlparse
-from requests import get
 from io import BytesIO
+from PIL import Image
+from requests import get
 
 
 def load_image(path: Union[Path, str]) -> Image.Image:
@@ -38,5 +38,5 @@ def is_image(path: Union[Path, str]) -> bool:
     try:
         load_image(path)
         return True
-    except:
+    except Exception:# pylint: disable=W0703
         return False

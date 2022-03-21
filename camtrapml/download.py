@@ -1,16 +1,21 @@
+"""
+Download / Cache Utilities
+"""
+
 from pathlib import Path
+from hashlib import md5
+from requests import get
+from tqdm import tqdm
 
 CACHE_HOME = Path.home() / ".camtrapml"
 
 
-def download(url: str, path: Path, hash: str) -> None:
+def download(url: str, path: Path, md5_hash: str) -> None:
     """
     Downloads a file from a URL to a path.
     """
-    from requests import get
-    from tqdm import tqdm
 
-    if path.exists() and (hash == "" or hash == hash(path)):
+    if path.exists() and (md5_hash == "" or md5_hash == hash(path)):
         return
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -24,20 +29,19 @@ def download(url: str, path: Path, hash: str) -> None:
         unit="iB",
         unit_scale=True,
         unit_divisor=1024,
-    ) as bar:
+    ) as progress_bar:
         for data in resp.iter_content(chunk_size=1024):
             size = file.write(data)
-            bar.update(size)
+            progress_bar.update(size)
 
-    if hash != "":
-        assert hash == hash(path)
+    if md5_hash != "":
+        assert md5_hash == hash(path)
 
 
-def hash(path: Path) -> str:
+def hash_file(path: Path) -> str:
     """
     Hashes a file.
     """
-    import hashlib
 
-    with open(path, "rb") as f:
-        return hashlib.md5(f.read()).hexdigest()
+    with open(path, "rb") as file_handle:
+        return md5(file_handle.read()).hexdigest()

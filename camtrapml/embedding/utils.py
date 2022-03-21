@@ -1,11 +1,16 @@
-def plot_embeddings(embeddings, labels=None, title=None, save_path=None):
+"""
+Embeddings Utilities
+"""
+
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA
+
+
+def plot_embeddings(embeddings, labels=None, title=None):
     """
     Plots the embeddings of the images in the dataset.
     """
-    import matplotlib.pyplot as plt
-    from matplotlib.font_manager import FontProperties
-    from sklearn.manifold import TSNE
-    from sklearn.decomposition import PCA
 
     # Normalize the embeddings
     embeddings = embeddings / embeddings.std(axis=1).reshape(-1, 1)
@@ -27,7 +32,7 @@ def plot_embeddings(embeddings, labels=None, title=None, save_path=None):
             c=labels[i] if labels else None,
             alpha=0.5,
         )
-    # plt.legend(handles=get_legend_handles(labels), loc='best', prop=FontProperties(size=10))
+
     if title is not None:
         plt.title(title)
 

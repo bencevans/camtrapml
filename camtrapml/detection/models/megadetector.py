@@ -19,12 +19,14 @@ where each version is provided with a consistent API.
 """
 from pathlib import Path
 from typing import Tuple, Union
-from .tensorflow import TF1ODAPIFrozenModel
 from json import load
+from .tensorflow import TF1ODAPIFrozenModel
 from ...download import CACHE_HOME
 
+MODEL_FILES_ROUTE = "https://lilablobssc.blob.core.windows.net/models/camera_traps/megadetector/"
 
-class MegaDetectorV4_1(TF1ODAPIFrozenModel):
+
+class MegaDetectorV4_1(TF1ODAPIFrozenModel): # pylint: disable=C0103
     """
     MegaDetector v4.1
     """
@@ -37,7 +39,7 @@ class MegaDetectorV4_1(TF1ODAPIFrozenModel):
 
     model_name = "megadetector"
     model_version = "v4.1.0"
-    model_url = "https://lilablobssc.blob.core.windows.net/models/camera_traps/megadetector/md_v4.1.0/md_v4.1.0.pb"
+    model_url = MODEL_FILES_ROUTE + "md_v4.1.0/md_v4.1.0.pb"
     model_hash = "7008707c66787a4d1c6544c27523f714"
     model_path = CACHE_HOME / "models" / "megadetector" / "v4.1.0" / "md_v4.1.0.pb"
 
@@ -54,7 +56,7 @@ class MegaDetectorV3(TF1ODAPIFrozenModel):
 
     model_name = "megadetector"
     model_version = "v3.0.0"
-    model_url = "https://lilablobssc.blob.core.windows.net/models/camera_traps/megadetector/megadetector_v3.pb"
+    model_url = MODEL_FILES_ROUTE + "megadetector/megadetector_v3.pb"
     model_hash = "1a4ca31abf9dca286ff1641eedbccc3d"
     model_path = CACHE_HOME / "models" / "megadetector" / "v3.0.0" / "md_v3.0.0.pb"
 
@@ -70,7 +72,7 @@ class MegaDetectorV2(TF1ODAPIFrozenModel):
 
     model_name = "megadetector"
     model_version = "v2.0.0"
-    model_url = "https://lilablobssc.blob.core.windows.net/models/camera_traps/megadetector/megadetector_v2.pb"
+    model_url = MODEL_FILES_ROUTE + "/megadetector/megadetector_v2.pb"
     model_hash = "3a634a610d9a74f671cef08f75cfd661"
     model_path = CACHE_HOME / "models" / "megadetector" / "v2.0.0" / "md_v2.0.0.pb"
 
@@ -92,7 +94,7 @@ def read_megadetector_batch_file(
     image_paths = []
     image_detections = []
 
-    images = load(open(path, "r"))["images"]
+    images = load(open(path, "r", encoding="UTF-8"))["images"]
 
     for image_data in images:
         image_path = image_dir / image_data["file"]

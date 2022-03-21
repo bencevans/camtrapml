@@ -4,7 +4,7 @@ Detection Utilities
 from pathlib import Path
 from typing import Union
 from PIL import Image, ImageDraw, ImageFont
-from font_fredoka_one import FredokaOne
+from font_fredoka_one import FredokaOne # pylint: disable=E0611
 
 
 def render_detections(
@@ -56,7 +56,7 @@ def render_detections(
                 else str(detection["category"])
             )
             text = class_name if draw_label else ""
-            text += " {:.2f}".format(detection["conf"]) if draw_score else ""
+            text += f" {detection['conf']:.2f}" if draw_score else ""
             draw.text(
                 (
                     (min_x * image_width),
