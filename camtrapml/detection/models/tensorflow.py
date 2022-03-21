@@ -75,8 +75,12 @@ class TF1ODAPIFrozenModel:
             self.class_map = class_map
 
         if Path(self.model_path).exists() == False and self.model_url != "":
-            download(self.model_url, self.model_path, '')
-        elif Path(self.model_path).exists() == True and model_hash in dir(self) and self.model_hash != "":
+            download(self.model_url, self.model_path, "")
+        elif (
+            Path(self.model_path).exists() == True
+            and model_hash in dir(self)
+            and self.model_hash != ""
+        ):
             local_hash = hash(self.model_path)
             if local_hash != self.model_hash:
                 raise ValueError(

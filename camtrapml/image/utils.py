@@ -15,7 +15,7 @@ def load_image(path: Union[Path, str]) -> Image.Image:
     Loads an image from a path.
     """
 
-    if isinstance(path, str) and urlparse(path).scheme in ['http', 'https']:
+    if isinstance(path, str) and urlparse(path).scheme in ["http", "https"]:
         return Image.open(BytesIO(get(path).content))
 
     return Image.open(path)

@@ -49,9 +49,7 @@ def render_detections(
             )
 
         if draw_label or draw_score:
-            font = ImageFont.FreeTypeFont(
-                FredokaOne, size=40
-            )
+            font = ImageFont.FreeTypeFont(FredokaOne, size=40)
             class_name = (
                 class_map[detection["category"]]
                 if class_map and detection["category"] in class_map

@@ -10,18 +10,18 @@ def download(url: str, path: Path, hash: str) -> None:
     from requests import get
     from tqdm import tqdm
 
-    if path.exists() and (hash == '' or hash == hash(path)):
+    if path.exists() and (hash == "" or hash == hash(path)):
         return
 
     path.parent.mkdir(parents=True, exist_ok=True)
 
     resp = get(url, stream=True)
-    total = int(resp.headers.get('content-length', 0))
+    total = int(resp.headers.get("content-length", 0))
 
-    with path.open('wb') as file, tqdm(
-        desc='Downloading Model',
+    with path.open("wb") as file, tqdm(
+        desc="Downloading Model",
         total=total,
-        unit='iB',
+        unit="iB",
         unit_scale=True,
         unit_divisor=1024,
     ) as bar:
@@ -29,7 +29,7 @@ def download(url: str, path: Path, hash: str) -> None:
             size = file.write(data)
             bar.update(size)
 
-    if hash != '':
+    if hash != "":
         assert hash == hash(path)
 
 
