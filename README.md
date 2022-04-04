@@ -16,10 +16,10 @@ Search for images in a directory, load an image and create a thumbnail.
 ```python
 %load_ext autoreload
 %autoreload
-from camtrapml.dataset import Dataset
+from camtrapml.dataset import ImageDataset
 from camtrapml.image.utils import load_image, thumbnail
 
-ena24 = Dataset(
+ena24 = ImageDataset(
     name="ena24",
     path="/pool0/datasets/ena24/ena24",
 )
