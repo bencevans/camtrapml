@@ -5,7 +5,11 @@ description = "CamTrapML is a Python library for Detecting, Classifying, and Ana
 authors = ["Benjamin C. Evans <Benjamin.Evans@brunel.ac.uk>"]
 license = "MIT"
 keywords = ["wildlife", "camtrap", "camera", "trap", "imagery", "classification", "detection", "analysis", "conservation"]
-url = "https://github.com/bencevans/camtrapml"
+homepage = "https://github.com/bencevans/camtrapml"
+repository = "https://github.com/bencevans/camtrapml"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/bencevans/camtrapml/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
