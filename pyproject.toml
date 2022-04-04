@@ -7,6 +7,25 @@ license = "MIT"
 keywords = ["wildlife", "camtrap", "camera", "trap", "imagery", "classification", "detection", "analysis", "conservation"]
 homepage = "https://github.com/bencevans/camtrapml"
 repository = "https://github.com/bencevans/camtrapml"
+documentation = "https://github.com/bencevans/camtrapml"
+readme = "README.md"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Scientific/Engineering :: Image Recognition"
+]
+
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/bencevans/camtrapml/issues"
