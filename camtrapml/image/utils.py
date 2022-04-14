@@ -12,7 +12,7 @@ from requests import get
 ImageSource = Union[Image.Image, Path, str]
 
 
-def load_image(source: ImageSource, mode = "rgb") -> Image.Image:
+def load_image(source: ImageSource, mode = "RGB") -> Image.Image:
     """
     Loads an image from a path or url or returns a copy of a previously loaded image.
     """
