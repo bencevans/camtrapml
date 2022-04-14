@@ -31,16 +31,16 @@ classifiers = [
 "Bug Tracker" = "https://github.com/bencevans/camtrapml/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
-tensorflow = "^2.8.0"
-numpy = "^1.22.2"
-tqdm = "^4.62.3"
-Pillow = "^9.0.1"
+python = ">=3.7,<4.0.0"
+tensorflow = "^2"
+numpy = "^1"
+tqdm = "^4"
+Pillow = "^9"
 tensorflow-hub = "^0.12.0"
 PyExifTool = "^0.4.13"
 font-fredoka-one = "^0.0.4"
-requests = "^2.27.1"
-matplotlib = "^3.5.1"
+requests = "^2"
+matplotlib = "^3"
 scikit-learn = "1.0.1"
 
 
