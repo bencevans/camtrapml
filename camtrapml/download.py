@@ -15,7 +15,7 @@ def download(url: str, path: Path, md5_hash: str) -> None:
     Downloads a file from a URL to a path.
     """
 
-    if path.exists() and (md5_hash == "" or md5_hash == hash(path)):
+    if path.exists() and (md5_hash == "" or md5_hash == hash_file(path)):
         return
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -35,7 +35,7 @@ def download(url: str, path: Path, md5_hash: str) -> None:
             progress_bar.update(size)
 
     if md5_hash != "":
-        assert md5_hash == hash(path)
+        assert md5_hash == hash_file(path)
 
 
 def hash_file(path: Path) -> str:
