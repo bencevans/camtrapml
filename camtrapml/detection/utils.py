@@ -1,7 +1,6 @@
 """
 Detection Utilities
 """
-from pathlib import Path
 from typing import Union
 from PIL import Image, ImageDraw, ImageFont
 from font_fredoka_one import FredokaOne  # pylint: disable=E0611
