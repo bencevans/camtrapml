@@ -5,10 +5,10 @@ from pathlib import Path
 from typing import Union
 from PIL import Image, ImageDraw, ImageFont
 from font_fredoka_one import FredokaOne  # pylint: disable=E0611
-
+from ..image.utils import ImageSource, load_image
 
 def render_detections(
-    image_path: Union[Path, str],
+    image_source: ImageSource,
     detections,
     draw_box=True,
     draw_score=True,
@@ -28,7 +28,7 @@ def render_detections(
       The rendered image as PIL.Image.
     """
 
-    image = Image.open(image_path)
+    image = load_image(image_source)
     draw = ImageDraw.Draw(image)
 
     for detection in detections:
