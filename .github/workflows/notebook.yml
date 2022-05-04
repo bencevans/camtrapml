@@ -1,0 +1,22 @@
+name: Check Notebook
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "poetry"
+      - name: Installing Dependencies
+        run: poetry install
+      - name: Run the notebook
+        run: poetry run jupyter nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=-1 README.ipynb
