@@ -29,7 +29,14 @@ def extract_multiple_exif_fast(paths: List[Union[Path, str]], batch_size=100) ->
     Extracts EXIF data from a list of images by spreading the load across
     multiple processes making use of multiple CPU cores.
     """
+    if len(paths) <= batch_size:
+        batch_size = len(paths)
+
+    paths = [str(path) for path in paths]
     batched_paths = list(zip(*[iter(paths)] * batch_size))
+    
+
+    print('batched', batched_paths)
 
     exif_data = process_map(
         extract_multiple_exif, batched_paths, desc="Extracting EXIF data", chunksize=3
