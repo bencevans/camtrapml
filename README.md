@@ -16,17 +16,18 @@ Search for images in a directory, load an image and create a thumbnail.
 ```python
 %load_ext autoreload
 %autoreload
+
 from camtrapml.dataset import ImageDataset
 from camtrapml.image.utils import load_image, thumbnail
 
-ena24 = ImageDataset(
-    name="ena24",
-    path="/pool0/datasets/ena24/ena24",
+imageset = ImageDataset(
+    name="Test Images",
+    path="test/fixtures/images",
 )
 
-ena24_image_paths = list(ena24.enumerate_images())
+image_paths = list(imageset.enumerate_images())
 
-thumbnail(load_image(ena24_image_paths[0]))
+thumbnail(load_image(image_paths[0]))
 ```
 
 ### EXIF Extraction
@@ -43,7 +44,7 @@ Three methods are available for extracting EXIF data from images. Each with diff
 ```python
 from camtrapml.image.exif import extract_exif
 
-exif = extract_exif(ena24_image_paths[0])
+exif = extract_exif(image_paths[0])
 exif
 ```
 
@@ -55,7 +56,7 @@ exif
 ```python
 from camtrapml.image.exif import extract_multiple_exif
 
-exif = extract_multiple_exif(ena24_image_paths)
+exif = extract_multiple_exif(image_paths)
 exif[0]
 ```
 
@@ -67,7 +68,7 @@ When processing large datasets, it's apparent that the bottleneck in extracting 
 ```python
 from camtrapml.image.exif import extract_multiple_exif_fast
 
-exif = extract_multiple_exif_fast(ena24_image_paths)
+exif = extract_multiple_exif_fast(image_paths)
 exif[0]
 ```
 
@@ -83,10 +84,10 @@ from camtrapml.detection.models.megadetector import MegaDetectorV4_1
 from camtrapml.detection.utils import render_detections
 
 with MegaDetectorV4_1() as detector:
-    detections = detector.detect(ena24_image_paths[0])
+    detections = detector.detect(image_paths[0])
 
 thumbnail(
-    render_detections(ena24_image_paths[0], detections, class_map=detector.class_map)
+    render_detections(image_paths[0], detections, class_map=detector.class_map)
 )
 ```
 
@@ -94,24 +95,22 @@ thumbnail(
 
 
 ```python
+!cp ~/.camtrapml/models/megadetector/v4.1.0/md_v4.1.0.pb example-custom-model.pb
+
 from camtrapml.detection.models.tensorflow import TF1ODAPIFrozenModel
 from camtrapml.detection.utils import render_detections
 from pathlib import Path
 
 with TF1ODAPIFrozenModel(
-    model_path=Path("~/Downloads/my-custom-model.pb").expanduser(),
-    model_image_tensor_name="image_tensor:0",
-    model_boxes_tensor_name="detection_boxes:0",
-    model_scores_tensor_name="detection_scores:0",
-    model_classes_tensor_name="detection_classes:0",
+    model_path=Path("example-custom-model.pb").expanduser(),
     class_map={
         1: "animal",
     },
 ) as detector:
-    detections = detector.detect(ena24_image_paths[1])
+    detections = detector.detect(image_paths[1])
 
 thumbnail(
-    render_detections(ena24_image_paths[1], detections, class_map=detector.class_map)
+    render_detections(image_paths[1], detections, class_map=detector.class_map)
 )
 ```
 
@@ -123,9 +122,9 @@ from camtrapml.detection.models.megadetector import MegaDetectorV4_1
 from camtrapml.detection.utils import extract_detections_from_image
 
 with MegaDetectorV4_1() as detector:
-    detections = detector.detect(ena24_image_paths[0])
+    detections = detector.detect(image_paths[0])
 
-list(extract_detections_from_image(load_image(ena24_image_paths[0]), detections))[0]
+list(extract_detections_from_image(load_image(image_paths[0]), detections))[0]
 ```
 
 #### Remove Humans from Images
@@ -139,7 +138,7 @@ from camtrapml.detection.utils import remove_detections_from_image
 from camtrapml.image.utils import load_image, thumbnail
 from pathlib import Path
 
-ct_image_with_humans = Path("/pool0/datasets/bens-day-at-zsl/IMG_0576.JPG").expanduser()
+ct_image_with_humans = Path("test/fixtures/human_images/IMG_0254.JPG").expanduser()
 
 with MegaDetectorV4_1() as detector:
     detections = detector.detect(ct_image_with_humans)
@@ -156,4 +155,9 @@ thumbnail(
         ],
     )
 )
+```
+
+
+```python
+
 ```
