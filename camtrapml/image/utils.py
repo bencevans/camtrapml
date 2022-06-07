@@ -12,13 +12,13 @@ from requests import get
 ImageSource = Union[Image.Image, Path, str]
 
 
-def load_image(source: ImageSource, mode = "RGB") -> Image.Image:
+def load_image(source: ImageSource, mode="RGB", timeout=10) -> Image.Image:
     """
     Loads an image from a path or url or returns a copy of a previously loaded image.
     """
 
     if isinstance(source, str) and urlparse(source).scheme in ["http", "https"]:
-        image = Image.open(BytesIO(get(source).content))
+        image = Image.open(BytesIO(get(source, timeout=timeout).content))
 
     elif isinstance(source, Image.Image):
         image = source.copy()
@@ -26,12 +26,10 @@ def load_image(source: ImageSource, mode = "RGB") -> Image.Image:
     else:
         image = Image.open(source)
 
-
     if mode is not None:
         image = image.convert(mode)
 
     return image
-
 
 
 def thumbnail(source: ImageSource, size: Tuple[int, int] = (400, 400)) -> Image.Image:
@@ -51,5 +49,5 @@ def is_image(path: ImageSource) -> bool:
     try:
         load_image(path)
         return True
-    except Exception:# pylint: disable=W0703
+    except Exception:  # pylint: disable=W0703
         return False
