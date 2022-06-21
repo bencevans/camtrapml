@@ -35,9 +35,6 @@ def extract_multiple_exif_fast(paths: List[Union[Path, str]], batch_size=100) ->
     paths = [str(path) for path in paths]
     batched_paths = list(zip(*[iter(paths)] * batch_size))
 
-
-    print('batched', batched_paths)
-
     exif_data = process_map(
         extract_multiple_exif, batched_paths, desc="Extracting EXIF data", chunksize=3
     )
