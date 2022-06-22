@@ -15,7 +15,7 @@ class ImageDataset:
     name: str
     path: Path
 
-    def __init__(self, name: str, path=None):
+    def __init__(self,path: Path, name = None):
         self.name = name
         self.path = Path(path).expanduser()
         self.image_set = None
