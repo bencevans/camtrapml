@@ -4,18 +4,19 @@ Dataset Handling
 
 from pathlib import Path
 from os import walk
-
-from camtrapml.image.utils import is_image
 from typing import Union
+from camtrapml.image.utils import is_image
+
 
 class ImageDataset:
     """
     A dataset is a collection of images.
     """
+
     name: str
     path: Path
 
-    def __init__(self,path: Path, name : Union[None, str] = None):
+    def __init__(self, path: Path, name: Union[None, str] = None):
         self.name = name
         self.path = Path(path).expanduser()
         self.image_set = None
