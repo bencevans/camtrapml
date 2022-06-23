@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument(
         "model",
         type=str,
-        help="Detection model to utilise [md4, md5a, md5b]",
+        help="Detection model to utilise [md2, md3, md4]",
     )
     parser.add_argument(
         "dataset_path",
