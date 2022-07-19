@@ -1,15 +1,13 @@
 from pathlib import Path
 from typing import Union
 
-from torch import jit
-from torchvision.transforms.functional import pil_to_tensor
-from camtrapml.detection.models.base import BaseDetector
+import yolov5
 
 from camtrapml.download import download, hash_file
 from camtrapml.image.utils import ImageSource, load_image
 
 
-class YOLOV5(BaseDetector):
+class YOLOV5:
     """
     YOLOV5
     """
@@ -67,7 +65,14 @@ class YOLOV5(BaseDetector):
         """
         Loads the model from the frozen model .pb file.
         """
-        self._model = jit.load(self.model_path)
+        self._model = yolov5.load(self.model_path)
+
+        self._model.conf = 0.25  # NMS confidence threshold
+        self._model.iou = 0.45  # NMS IoU threshold
+        self._model.agnostic = False  # NMS class-agnostic
+        self._model.multi_label = False  # NMS multiple labels per box
+        self._model.max_det = 1000  # maximum number of detections per image
+
 
     def close(self) -> None:
         """
@@ -95,34 +100,31 @@ class YOLOV5(BaseDetector):
             self.load_model()
 
         # Load the image.
-        image = load_image(image_source, mode="RGB")
-        image = image.resize((640, 640))
-        image = pil_to_tensor(image)
-        image = image.float()
-        image = image.unsqueeze(0)
+        results = self._model(image_source).tolist()[0]
 
-        self._model.eval()
-        result = self._model(image)
+        # print(dir())
 
-        # Get the bounding boxes and class scores.
-        results = result[0][0].detach().numpy()
-        boxes = results[:, :4] / 640
-        boxes = boxes.tolist()
-        scores = results[:, 4].tolist()
+        ouputs = []
+        
+        for detection in results.xywhn:
+            detection = detection.tolist()[0]
+            print(detection)
+            bbox = detection[:4]
+            conf = detection[4]
+            class_id = int(detection[5])
 
-        detections = []
-
-        for i in range(0, len(scores)):
-            if scores[i] < min_score:
+            if conf < min_score:
                 continue
 
-            detections.append({
-                # "category": self.class_map[int(box[5])],
-                "score": scores[i],
-                "bbox": boxes[i],
+            ouputs.append({
+                "bbox": bbox,
+                "category": class_id,
+                "conf": conf,
             })
+        
+        return ouputs
 
-        return detections
+
 
     def __enter__(self):
         self.load_model()
@@ -132,14 +134,14 @@ class YOLOV5(BaseDetector):
         self.close()
 
 
-model = YOLOV5(
-    model_path=Path("/home/bencevans/Projects/yolov5/md_v5a.0.0.torchscript"),
-)
+# model = YOLOV5(
+#     model_path=Path("/home/bencevans/Projects/yolov5/md_v5a.0.0.torchscript"),
+# )
 
-with model:
-    boxes = model.detect(
-        image_source=Path("/pool0/datasets/ena24/ena24/435.jpg"),
-        min_score=0.1,
-    )
+# with model:
+#     boxes = model.detect(
+#         image_source=Path("/pool0/datasets/ena24/ena24/435.jpg"),
+#         min_score=0.1,
+#     )
 
-    print(boxes)
+#     print(boxes)
