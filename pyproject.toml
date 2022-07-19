@@ -42,6 +42,7 @@ font-fredoka-one = "^0.0.4"
 requests = "^2"
 matplotlib = "^3"
 scikit-learn = "1.0.1"
+torch = "^1.12.0"
 
 
 [tool.poetry.dev-dependencies]
