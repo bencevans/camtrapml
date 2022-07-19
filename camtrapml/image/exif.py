@@ -41,3 +41,23 @@ def extract_multiple_exif_fast(paths: List[Union[Path, str]], batch_size=100) ->
 
     # Unbatch
     return [item for sublist in exif_data for item in sublist]
+
+def parse_iptc(keywords) -> dict:
+    """
+    Parses IPTC Tags
+    """
+
+    if isinstance(keywords, str):
+        keywords = [keywords]
+
+    def parse(keyword):
+        split = keyword.split(':')
+        if len(split) == 1:
+            return split[0], True
+
+        key = split[0].strip()
+        val = split[1].strip()
+
+        return key, val
+
+    return [parse(keyword) for keyword in keywords]
