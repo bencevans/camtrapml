@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "camtrapml"
-version = "0.3.0"
+version = "0.4.0"
 description = "CamTrapML is a Python library for Detecting, Classifying, and Analysing Wildlife Camera Trap Imagery."
 authors = ["Benjamin C. Evans <Benjamin.Evans@brunel.ac.uk>"]
 license = "MIT"
