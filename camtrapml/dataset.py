@@ -2,10 +2,10 @@
 Dataset Handling
 """
 
+from typing import Union
 from pathlib import Path
 from os import walk
 from PIL import Image
-from typing import Union
 from camtrapml.image.utils import is_image
 
 
