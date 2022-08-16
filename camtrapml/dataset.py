@@ -31,8 +31,11 @@ class ImageDataset:
         Enumerates all images in the dataset.
         """
 
-        exts = Image.registered_extensions()
-        supported_extensions = {ex.lower() for ex, f in exts.items() if f in Image.OPEN}
+        supported_extensions = {
+            extention.lower() for extention, image_format in
+            Image.registered_extensions().items()
+            if image_format in Image.OPEN
+        }
 
         for root, _, files in walk(self.path):
             for file in files:
@@ -45,7 +48,6 @@ class ImageDataset:
                 else:
                     if file_path.suffix.lower() in supported_extensions:
                         yield file_path
-
 
     @staticmethod
     def from_coco(source):
