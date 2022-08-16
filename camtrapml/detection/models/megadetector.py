@@ -21,9 +21,49 @@ from pathlib import Path
 from typing import Tuple, Union
 from json import load
 from .tensorflow import TF1ODAPIFrozenModel
+from .yolov5 import YOLOV5
 from ...download import CACHE_HOME
 
 MODEL_FILES_ROUTE = "https://lilablobssc.blob.core.windows.net/models/camera_traps/megadetector/"
+
+
+class MegaDetectorV5a(YOLOV5):
+    """
+    MegaDetector V5a
+    """
+
+    class_map = {
+        1: "animal",
+        2: "human",
+        3: "vehicle",
+    }
+
+    model_name = "megadetector"
+    model_version = "v5a"
+    model_path = CACHE_HOME / "models/megadetector/v5a/md_v5a.0.0.pt"
+    model_url = "https://github.com/microsoft/CameraTraps/releases/download/v5.0/md_v5a.0.0.pt"
+    model_hash = "ec1d7603ec8cf642d6e0cd008ba2be8c"
+
+class MegaDetectorV5a(YOLOV5):
+    """
+    MegaDetector V5a
+    """
+
+    class_map = {
+        1: "animal",
+        2: "human",
+        3: "vehicle",
+    }
+
+    model_name = "megadetector"
+    model_version = "v5a"
+    model_path = CACHE_HOME / "models/megadetector/v5b/md_v5b.0.0.pt"
+    model_url = "https://github.com/microsoft/CameraTraps/releases/download/v5.0/md_v5b.0.0.pt"
+    model_hash = "76749a62006c66b0e34ac4b846ce6942"
+
+
+
+
 
 
 class MegaDetectorV4_1(TF1ODAPIFrozenModel):  # pylint: disable=C0103
