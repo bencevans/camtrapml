@@ -1,3 +1,5 @@
+🚨 Looking for a simple way to run MegaDetector v5 without code? Check out the [CamTrap Detector](https://github.com/bencevans/camtrap-detector#readme) project! 🚨
+
 # CamTrapML
 
 > CamTrapML is a Python library for Detecting, Classifying, and Analysing Wildlife [Camera Trap](https://en.wikipedia.org/wiki/Camera_trap) Imagery.
