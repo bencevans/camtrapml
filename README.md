@@ -8,7 +8,29 @@
 
     $ pip install camtrapml
 
-## Features
+## Command Line Interface
+
+### Batch Detection
+
+CamTrapML includes a Command Line Interface (CLI) for running batch detection. The interface is designed to follow that of the MegaDetector run_batch_detection.py script, currently with some caveats. Currently the CLI assumes reccursive directory search for images and does not support image_queue which means the MegaDetector run_batch_detection.py will likely process faster. 
+
+    $ python -m camtrapml.scripts.batch_detection model_name input_dir output_json_path
+
+The options available for `model_name` are:
+
+* `md2`: MegaDetector v2
+* `md3`: MegaDetector v3
+* `md4`: MegaDetector v4.1
+
+Add `--output_relative_filenames` to output filenames relative to the `input_dir` in the output JSON.
+
+E.g.
+
+    $ python -m camtrapml.scripts.batch_detection --output_relative_filenames md4 ~/Survey2022 ~/Survey2022/md.4.1.0.json 
+
+
+
+## Programatic Usage
 
 ### Loading Data
 
